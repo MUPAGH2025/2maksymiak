@@ -1,14 +1,41 @@
 name: sprawozdanie
+
 on: push
+
 jobs:
   pdf:
-      runs-on: ubuntu-22.04
-      steps:
-        - run: pip install ipykernel scipy pint open_atmos_jupyter_utils
-        - uses: actions/checkout@v4
-        - run: sudo apt-get install texlive-xetex inkscape pandoc
-        - run: pip install nbconvert
-        - run: python -m nbconvert --to pdf --execute MUP2.ipynb
-        - uses: actions/upload-artifact@v4
-          with:
-            path: anim.gif
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python deps
+        run: |
+          pip install ipykernel scipy pint open_atmos_jupyter_utils nbconvert
+
+      - name: Install TeX + tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-xetex inkscape pandoc
+
+      - name: Execute notebook and generate PDF
+        run: |
+          python -m nbconvert \
+            --to pdf \
+            --execute projekt/projekt_mup.ipynb \
+            --output projekt_mup.pdf \
+            --output-dir projekt
+
+      - name: Upload artifacts (PDF + GIF folder)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprawozdanie
+          path: |
+            projekt/projekt_mup.pdf
+            projekt/grafiki/
