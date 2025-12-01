@@ -17,7 +17,13 @@ jobs:
 
       - name: Install Python deps
         run: |
-          pip install ipykernel scipy pint open_atmos_jupyter_utils PyMDATA nbconvert
+          pip install \
+            ipykernel \
+            scipy \
+            pint \
+            PyMDATA \
+            open_atmos_jupyter_utils \
+            nbconvert
 
       - name: Install TeX + tools
         run: |
