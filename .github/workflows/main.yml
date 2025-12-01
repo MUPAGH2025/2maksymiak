@@ -18,20 +18,11 @@ jobs:
       - name: Install Python deps
         run: pip install matplotlib pint open-atmos-jupyter-utils scipy nbconvert ipykernel pympdata
 
-      - name: Execute notebook with long timeout
-        run: |
-          jupyter nbconvert \
-            --to notebook \
-            --execute projekt/projekt_mup.ipynb \
-            --output projekt_mup_executed.ipynb \
-            --output-dir projekt \
-            --ExecutePreprocessor.timeout=2000
-
-      - name: Convert executed notebook to PDF
+      - name: Convert notebook (bez execute) to PDF
         run: |
           jupyter nbconvert \
             --to pdf \
-            projekt/projekt_mup_executed.ipynb \
+            projekt/projekt_mup.ipynb \
             --output projekt_mup.pdf \
             --output-dir projekt
 
