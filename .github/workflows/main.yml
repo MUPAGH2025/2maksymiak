@@ -51,8 +51,10 @@ jobs:
           cd projekt
           xelatex -interaction=nonstopmode projekt_mup.tex
 
-      - name: Upload PDF artifact
+      - name: Upload PDF + graphics artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sprawozdanie
-          path: projekt/projekt_mup.pdf
+          path: |
+            projekt/projekt_mup.pdf
+            projekt/grafiki/*
