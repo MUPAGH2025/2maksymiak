@@ -16,24 +16,40 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Python deps
-        run: pip install matplotlib pint open-atmos-jupyter-utils scipy nbconvert ipykernel pympdata
-
-      - name: Generate clean PDF (hide HTML/HBox outputs)
         run: |
-          jupyter nbconvert projekt/projekt_mup.ipynb \
-            --to pdf \
-            --output projekt_mup \
-            --output-dir projekt \
+          pip install \
+            matplotlib \
+            pint \
+            open-atmos-jupyter-utils \
+            scipy \
+            nbconvert \
+            ipykernel \
+            pympdata
+
+      - name: Export notebook to LaTeX
+        run: |
+          jupyter nbconvert \
+            projekt/projekt_mup.ipynb \
+            --to latex \
+            --no-input \
             --no-prompt \
-            --TemplateExporter.exclude_input=True \
-            --TemplateExporter.exclude_output_prompt=True \
-            --TemplateExporter.exclude_raw=True \
-            --TemplateExporter.exclude_anchor_links=True \
-            --TemplateExporter.exclude_input_line_numbers=True \
-            --TagRemovePreprocessor.remove_cell_tags='["html-output"]' \
-            --TagRemovePreprocessor.enabled=True \
-            --PDFExporter.exclude_output=True \
-            --PDFExporter.latex_command="['xelatex','-interaction=nonstopmode','%(filename)s']" || true
+            --output projekt_mup \
+            --output-dir projekt
+
+      - name: Clean LaTeX (remove HTML junk and title/date)
+        run: |
+          sed -i '/IPython.core.display.HTML object/d' projekt/projekt_mup.tex
+          sed -i '/HTML(value=/d' projekt/projekt_mup.tex
+
+          sed -i '/\\title{/d'  projekt/projekt_mup.tex
+          sed -i '/\\author{/d' projekt/projekt_mup.tex
+          sed -i '/\\date{/d'   projekt/projekt_mup.tex
+          sed -i '/\\maketitle/d' projekt/projekt_mup.tex
+
+      - name: Build PDF with xelatex
+        run: |
+          cd projekt
+          xelatex -interaction=nonstopmode projekt_mup.tex
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
