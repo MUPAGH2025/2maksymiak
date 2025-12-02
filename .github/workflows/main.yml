@@ -25,7 +25,7 @@ jobs:
             --no-input \
             --no-prompt \
             projekt/projekt_mup.ipynb \
-            --output projekt_mup.pdf \
+            --output projekt_mup \
             --output-dir projekt || true
 
       - name: Upload PDF artifact
