@@ -18,13 +18,15 @@ jobs:
       - name: Install Python deps
         run: pip install matplotlib pint open-atmos-jupyter-utils scipy nbconvert ipykernel pympdata
 
-      - name: Convert notebook (bez execute) to PDF
+      - name: Convert notebook to PDF (no code cells)
         run: |
           jupyter nbconvert \
             --to pdf \
+            --no-input \
+            --no-prompt \
             projekt/projekt_mup.ipynb \
             --output projekt_mup.pdf \
-            --output-dir projekt
+            --output-dir projekt || true
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
