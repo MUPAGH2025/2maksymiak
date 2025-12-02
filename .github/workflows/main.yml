@@ -42,4 +42,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sprawozdanie
-          path: projekt/*.pdf
+          path: projekt/projekt_mup.pdf
