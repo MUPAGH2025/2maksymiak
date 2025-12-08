@@ -54,8 +54,18 @@ jobs:
           path = Path("projekt/projekt_mup.tex")
           tex = path.read_text()
           
-          pattern = r"\\begin{Verbatim}[\s\S]*?HBox\(children=[\s\S]*?\\end{Verbatim}[\s\r\n]*"
-          tex = re.sub(pattern, "", tex)
+          verb_pattern = re.compile(
+              r"\\begin{[Vv]erbatim}[\s\S]*?\\end{[Vv]erbatim}",
+              re.MULTILINE)
+          
+          def drop_hbox_verbatim(m):
+              block = m.group(0)
+              if "HBox(children=" in block:
+                  return "" 
+              return block  
+          
+          tex = verb_pattern.sub(drop_hbox_verbatim, tex)
+          tex = re.sub(r".*HBox\(children=.*\n", "", tex)
           
           path.write_text(tex)
           EOF
