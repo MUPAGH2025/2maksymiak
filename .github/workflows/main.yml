@@ -9,9 +9,16 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y texlive-xetex texlive-latex-extra inkscape pandoc
       - run: pip install nbconvert
       - run: jupyter nbconvert --to latex --execute projekt/projekt_mup.ipynb --TemplateExporter.exclude_input=True
-      - run: sed -i '/HBox(children=/d' projekt/projekt_mup.tex
-      - run: sed -i 's/\\title{Jaka będzie różnica w czasie dotarcia fali do brzegu w zależności od ukształtowania stoku dna?}\\author{Aleksandra Kot}//' projekt/projekt_mup.tex
       - run: |
+          sed -i '/\\title{/d'      projekt/projekt_mup.tex
+          sed -i '/\\author{/d'     projekt/projekt_mup.tex
+          sed -i '/\\date{/d'       projekt/projekt_mup.tex
+          sed -i '/\\maketitle/d'   projekt/projekt_mup.tex
+
+          sed -i '/HBox(children=/d' projekt/projekt_mup.tex
+
+          sed -i '0,/\\begin{document}/s//\\begin{document}\n\\title{Jaka będzie różnica w czasie dotarcia fali do brzegu w zależności od ukształtowania stoku dna?}\n\\author{Wiktoria Maksymiak}\n\\date{}\n\\maketitle\n/' projekt/projekt_mup.tex
+
           cd projekt
           xelatex -interaction=nonstopmode projekt_mup.tex
           xelatex -interaction=nonstopmode projekt_mup.tex
