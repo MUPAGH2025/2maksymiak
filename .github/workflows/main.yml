@@ -46,6 +46,7 @@ jobs:
           sed -i '/\\author{/d' projekt/projekt_mup.tex
           sed -i '/\\date{/d'   projekt/projekt_mup.tex
           sed -i '/\\maketitle/d' projekt/projekt_mup.tex
+
           python - << 'EOF'
           from pathlib import Path
           import re
@@ -53,12 +54,8 @@ jobs:
           path = Path("projekt/projekt_mup.tex")
           tex = path.read_text()
           
-          tex = re.sub(
-              r"\\\\begin{Verbatim}.*?HBox\\(children=.*?\\\\end{Verbatim}\\s*",
-              "",
-              tex,
-              flags=re.S,
-          )
+          pattern = r"\\begin{Verbatim}[\s\S]*?HBox\(children=[\s\S]*?\\end{Verbatim}[\s\r\n]*"
+          tex = re.sub(pattern, "", tex)
           
           path.write_text(tex)
           EOF
