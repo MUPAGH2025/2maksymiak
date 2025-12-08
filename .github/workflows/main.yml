@@ -20,4 +20,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: sprawozdanie_WM
-          path: projekt/projekt_mup.pdf
+          path: |
+            projekt/projekt_mup.pdf
+            projekt/grafiki/*
