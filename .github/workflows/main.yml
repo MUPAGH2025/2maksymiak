@@ -26,30 +26,46 @@ jobs:
             ipykernel \
             pympdata
 
-      - name: Export notebook to LaTeX
+      - name: Execute notebook and export to LaTeX
         run: |
           jupyter nbconvert \
             projekt/projekt_mup.ipynb \
+            --execute \
             --to latex \
             --no-input \
             --no-prompt \
             --TagRemovePreprocessor.enabled=True \
             --TagRemovePreprocessor.remove_cell_tags='["no-pdf"]' \
+            --ExecutePreprocessor.timeout=600 \
             --output projekt_mup \
-            --output-dir projekt 
+            --output-dir projekt
 
-      - name: Clean LaTeX (remove HTML junk and title/date)
+      - name: Clean LaTeX (remove HTML junk, title/date and HBox blocks)
         run: |
           sed -i '/\\title{/d'  projekt/projekt_mup.tex
           sed -i '/\\author{/d' projekt/projekt_mup.tex
           sed -i '/\\date{/d'   projekt/projekt_mup.tex
           sed -i '/\\maketitle/d' projekt/projekt_mup.tex
-          sed -i '/HBox(children=/d' projekt/projekt_mup.tex
+          python - << 'EOF'
+          from pathlib import Path
+          import re
+          
+          path = Path("projekt/projekt_mup.tex")
+          tex = path.read_text()
+          
+          tex = re.sub(
+              r"\\\\begin{Verbatim}.*?HBox\\(children=.*?\\\\end{Verbatim}\\s*",
+              "",
+              tex,
+              flags=re.S,
+          )
+          
+          path.write_text(tex)
+          EOF
 
       - name: Insert custom title and author
         run: |
           sed -i '0,/\\begin{document}/s//\\begin{document}\n\\title{Jaka będzie różnica w czasie dotarcia fali do brzegu w zależności od ukształtowania stoku dna?}\n\\author{Wiktoria Maksymiak}\n\\date{}\n\\maketitle\n/' projekt/projekt_mup.tex
-      
 
       - name: Build PDF with xelatex
         run: |
