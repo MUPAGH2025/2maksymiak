@@ -33,8 +33,11 @@ jobs:
             --to latex \
             --no-input \
             --no-prompt \
+            --TagRemovePreprocessor.enabled=True \
+            --TagRemovePreprocessor.remove_cell_tags='["no-pdf"]' \
             --output projekt_mup \
             --output-dir projekt
+    
 
       - name: Clean LaTeX (remove HTML junk and title/date)
         run: |
