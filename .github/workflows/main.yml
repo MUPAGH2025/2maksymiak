@@ -47,29 +47,6 @@ jobs:
           sed -i '/\\date{/d'   projekt/projekt_mup.tex
           sed -i '/\\maketitle/d' projekt/projekt_mup.tex
 
-          python - << 'EOF'
-          from pathlib import Path
-          import re
-          
-          path = Path("projekt/projekt_mup.tex")
-          tex = path.read_text()
-          
-          verb_pattern = re.compile(
-              r"\\begin{[Vv]erbatim}[\s\S]*?\\end{[Vv]erbatim}",
-              re.MULTILINE)
-          
-          def drop_hbox_verbatim(m):
-              block = m.group(0)
-              if "HBox(children=" in block:
-                  return "" 
-              return block  
-          
-          tex = verb_pattern.sub(drop_hbox_verbatim, tex)
-          tex = re.sub(r".*HBox\(children=.*\n", "", tex)
-          
-          path.write_text(tex)
-          EOF
-
       - name: Insert custom title and author
         run: |
           sed -i '0,/\\begin{document}/s//\\begin{document}\n\\title{Jaka będzie różnica w czasie dotarcia fali do brzegu w zależności od ukształtowania stoku dna?}\n\\author{Wiktoria Maksymiak}\n\\date{}\n\\maketitle\n/' projekt/projekt_mup.tex
