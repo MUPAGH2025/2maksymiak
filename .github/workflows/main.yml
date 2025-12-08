@@ -1,4 +1,3 @@
-```yaml
 name: sprawozdanie_pdf
 on: push
 
@@ -37,7 +36,7 @@ jobs:
             --TagRemovePreprocessor.enabled=True \
             --TagRemovePreprocessor.remove_cell_tags='["no-pdf"]' \
             --output projekt_mup \
-            --output-dir projekt
+            --output-dir projekt 
 
       - name: Clean LaTeX (remove HTML junk and title/date)
         run: |
@@ -45,10 +44,12 @@ jobs:
           sed -i '/\\author{/d' projekt/projekt_mup.tex
           sed -i '/\\date{/d'   projekt/projekt_mup.tex
           sed -i '/\\maketitle/d' projekt/projekt_mup.tex
+          sed -i '/HBox(children=/d' projekt/projekt_mup.tex
 
       - name: Insert custom title and author
         run: |
           sed -i '0,/\\begin{document}/s//\\begin{document}\n\\title{Jaka będzie różnica w czasie dotarcia fali do brzegu w zależności od ukształtowania stoku dna?}\n\\author{Wiktoria Maksymiak}\n\\date{}\n\\maketitle\n/' projekt/projekt_mup.tex
+      
 
       - name: Build PDF with xelatex
         run: |
@@ -62,4 +63,3 @@ jobs:
           path: |
             projekt/projekt_mup.pdf
             projekt/grafiki/*
-```
