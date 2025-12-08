@@ -8,13 +8,13 @@ jobs:
       - run: pip install ipykernel scipy pint open_atmos_jupyter_utils numpy PyMPDATA
       - run: sudo apt-get update && sudo apt-get install -y texlive-xetex texlive-latex-extra inkscape pandoc
       - run: pip install nbconvert
-      - run: jupyter nbconvert --to latex --execute projekt_mup.ipynb --TemplateExporter.exclude_input=True
-      - run: sed -i '/HBox(children=/d' projekt_mup.tex
-      - run: sed -i 's/\\title{Jaka będzie różnica w czasie dotarcia fali do brzegu w zależności od ukształtowania stoku dna?}\\author{Aleksandra Kot}//' projekt_mup.tex
-      - run: xelatex -interaction=nonstopmode projekt_mup.tex
-      - run: xelatex -interaction=nonstopmode projekt_mup.tex
+      - run: jupyter nbconvert --to latex --execute projekt/projekt_mup.ipynb --TemplateExporter.exclude_input=True
+      - run: sed -i '/HBox(children=/d' projekt/projekt_mup.tex
+      - run: sed -i 's/\\title{Jaka będzie różnica w czasie dotarcia fali do brzegu w zależności od ukształtowania stoku dna?}\\author{Aleksandra Kot}//' projekt/projekt_mup.tex
+      - run: xelatex -interaction=nonstopmode projekt/projekt_mup.tex
+      - run: xelatex -interaction=nonstopmode projekt/projekt_mup.tex
 
       - uses: actions/upload-artifact@v4
         with:
           name: raport
-          path: projekt_mup.pdf
+          path: projekt/projekt_mup.pdf
